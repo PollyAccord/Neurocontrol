@@ -180,16 +180,23 @@ namespace ConsoleApp1
                                     if (((IDictionary)data["eSense"])["attention"].ToString() != "0" && ((IDictionary)data["eSense"])["meditation"].ToString() != "0")
                                     {
                                         ready = true;
-                                        Console.WriteLine("Device is ready. To close readings - CTRL+C\n");
+                                        Console.WriteLine("Device is ready.\n Moving backward - press B\n Moving left/right - press F\n Moving and stop - press any key\n To close readings - CTRL+C\n");
 
                                     }
                                 }
 
-
-                                //Start reading data
-
                                 if (ready)
                                 {
+                                    if (Console.KeyAvailable == true)
+                                    {
+                                        //startRead = true;
+                                        key = Console.ReadKey(true);
+
+                                        break;
+                                    }
+
+                                    //Start reading data
+
 
                                     eSense = (IDictionary)data["eSense"];
                                     blinkStrength = (IDictionary)data["blinkStrength"];
@@ -204,15 +211,92 @@ namespace ConsoleApp1
                                         meditation = eSense["meditation"].ToString();
                                         // blink = blinkStrength["blinkStrength"].ToString();
 
+                                        switch (key.Key) {
+                                            case ConsoleKey.F:
+                                                Console.WriteLine("Mode:moving left/right\n");
+                                                //left
+                                                if (Int32.Parse(attention) > 60)
+                                                {
+                                                    if (button.ToString() == "1")
+                                                        Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                         ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                         ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                         "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                         "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
-                                        if (count == 0) //no blink
-                                        {
-                                            Console.WriteLine("No blinks");
-                                            if (Int32.Parse(attention) > 40)
-                                            {
+                                                    // Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
+                                                    Console.WriteLine("Bot is moving left.\n");
+                                                    comPort.Write(left, 0, 1);
+                                                    Thread.Sleep(3000);
+                                                }
+
+                                                else if ((Int32.Parse(attention) < 60) && (Int32.Parse(meditation) > 40))
+                                                {
+                                                    //right
+                                                    if (button.ToString() == "1")
+                                                        Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                        ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                        ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                        "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                        "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
+
+                                                    //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
+                                                    Console.WriteLine("Bot is moving right.\n");
+                                                    comPort.Write(right, 0, 1);
+                                                    Thread.Sleep(3000);
+                                                }
+
+                                                else
+                                                {
+                                                    if (button.ToString() == "1")
+                                                        Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                        ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                        ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                        "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                        "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
+
+                                                    Console.WriteLine("Continue reading data.\n");
+                                                    Thread.Sleep(3000);
+                                                }
+                                                break;
+
+                                            case ConsoleKey.B:
+                                                Console.WriteLine("Mode: moving backward\n");
+                                                if (Int32.Parse(attention) > 60)
+                                                {
+                                                    //backward
+                                                    if (button.ToString() == "1")
+                                                        Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                        ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                        ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                        "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                        "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
+
+                                                    //Console.WriteLine("Blink strength: " + data["blinkStrength"].ToString());
+
+                                                    Console.WriteLine("Bot is moving backward.\n");
+                                                    comPort.Write(backward, 0, 1);
+                                                    Thread.Sleep(3000);
+                                                }
+                                                else
+                                                {
+                                                    if (button.ToString() == "1")
+                                                        Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                              ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                              ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                              "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                              "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
+
+                                                    Console.WriteLine("Continue reading data.\n");
+                                                    Thread.Sleep(3000);
+                                                }
+                                                break;
+
+                                        default:
+                                                Console.WriteLine("Mode: Moving forward or stop\n");
 
                                                 //forward
-
+                                                if (Int32.Parse(attention)>60) { 
                                                 if (button.ToString() == "1")
                                                     Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
                                                         ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
@@ -220,96 +304,43 @@ namespace ConsoleApp1
                                                         "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
                                                         "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
-                                                Console.WriteLine("Bot is moving forward.\n");                                               
+                                                Console.WriteLine("Bot is moving forward.\n");
                                                 comPort.Write(forward, 0, 1);
                                                 // Console.WriteLine("Blink strength \n: " + ((IDictionary)data["blinkStrength"]).ToString());       
                                                 Thread.Sleep(3000);
-                                            }
-
-                                            else if ((Int32.Parse(attention) < 40) && (Int32.Parse(meditation) > 40))
-                                            {
-
-                                                //stop
-                                                if (button.ToString() == "1")
-                                                    Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + ",\n" + "Theta:" +
-                                                                 ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha: " +
-                                                                 ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
-                                                                 "High Betta: " + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
-                                                                 "High Gamma: " + ((IDictionary)data["eegPower"])["highGamma"].ToString());
-
-
-                                                Console.WriteLine("Bot stopped.\n");
-                                                comPort.Write(standing, 0, 1);               
-                                                //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
-                                                Thread.Sleep(3000);
-                                            }
-
-                                            else
-                                            {
-                                                if (button.ToString() == "1")
-                                                    Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
-                                                          ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
-                                                          ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
-                                                          "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
-                                                          "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
-
-                                                Console.WriteLine("Continue reading data.\n");
-                                                Thread.Sleep(3000);
-                                            }
-
                                         }
 
-                                        else if (count > 0)
+                                            else if ((Int32.Parse(attention) < 60) && (Int32.Parse(meditation) > 40))
                                         {
-                                            if (count == 1)
-                                            {
-                                                //left
-                                                if (button.ToString() == "1")
-                                                    Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + ",\n" + "Theta:" +
-                                                     ((IDictionary)data["eegPower"])["theta"].ToString() + "," + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + "," + "HighAlpha:" +
-                                                     ((IDictionary)data["eegPower"])["highAlpha"].ToString() + "," + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + "," +
-                                                     "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + "," + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + "," +
-                                                     "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
-                                                // Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
-                                                Console.WriteLine("Bot is moving left.\n");
-                                                comPort.Write(left, 0, 1);                                              
-                                                Thread.Sleep(3000);
+                                            //stop
+                                            if (button.ToString() == "1")
+                                                Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + ",\n" + "Theta:" +
+                                                             ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha: " +
+                                                             ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                             "High Betta: " + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                             "High Gamma: " + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
-                                            }
 
-                                            else if (count == 2)
-                                            {
-                                                //right
-                                                if (button.ToString() == "1")
-                                                    Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
-                                                        ((IDictionary)data["eegPower"])["theta"].ToString() + "," + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + "," + "HighAlpha:" +
-                                                        ((IDictionary)data["eegPower"])["highAlpha"].ToString() + "," + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + "," +
-                                                        "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + "," + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + "," +
-                                                        "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
+                                            Console.WriteLine("Bot stopped.\n");
+                                            comPort.Write(standing, 0, 1);
+                                            //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
+                                            Thread.Sleep(3000);
+                                        }
 
-                                                //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
-                                                Console.WriteLine("Bot is moving right.\n");
-                                                comPort.Write(right, 0, 1);
-                                                Thread.Sleep(3000);
-                                            }
+                                        else
+                                        {
+                                            if (button.ToString() == "1")
+                                                Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
+                                                      ((IDictionary)data["eegPower"])["theta"].ToString() + ",\n" + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + ",\n" + "HighAlpha:" +
+                                                      ((IDictionary)data["eegPower"])["highAlpha"].ToString() + ",\n" + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + ",\n" +
+                                                      "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + ",\n" + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + ",\n" +
+                                                      "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
-                                            else if (count > 2 && Int32.Parse(attention) > 65)
-                                            {
-                                                //backward
-                                                if (button.ToString() == "1")
-                                                    Console.WriteLine("Delta: " + ((IDictionary)data["eegPower"])["delta"].ToString() + "," + "Theta:" +
-                                                        ((IDictionary)data["eegPower"])["theta"].ToString() + "," + "Low Alpha: " + ((IDictionary)data["eegPower"])["lowAlpha"].ToString() + "," + "High Alpha:" +
-                                                        ((IDictionary)data["eegPower"])["highAlpha"].ToString() + "," + "Low Betta: " + ((IDictionary)data["eegPower"])["lowBeta"].ToString() + "," +
-                                                        "High Betta:" + ((IDictionary)data["eegPower"])["highBeta"].ToString() + "," + "Low Gamma: " + ((IDictionary)data["eegPower"])["lowGamma"].ToString() + "," +
-                                                        "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
-
-                                                //Console.WriteLine("Blink strength: " + data["blinkStrength"].ToString());
-
-                                                Console.WriteLine("Bot is moving backward.\n");
-                                                comPort.Write(backward, 0, 1);
-                                                Thread.Sleep(3000);
-                                            }
+                                            Console.WriteLine("Continue reading data.\n");
+                                            Thread.Sleep(3000);
+                                        }
+                                                break;
                                         }
 
                                         count = 0;
