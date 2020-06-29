@@ -7,6 +7,7 @@ using Jayrock.Json.Conversion;
 using System.IO.Ports;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using NeuroSky.ThinkGear;
 using NeuroSky.ThinkGear.Algorithms;
 
@@ -17,15 +18,14 @@ namespace ConsoleApp1
 {
     class Program
     {
-       // public static StreamWriter EEG = new StreamWriter(@"EEGData_" + ".csv", true);
+            
+        // public static StreamWriter EEG = new StreamWriter(@"EEGData_" + ".csv", true);
 
         static Connector connect;
 
         static void Main(string[] args)
         {
-            
-
-            SerialPort comPort = new SerialPort();
+                 
 
             TcpClient client;
             Stream stream;
@@ -38,10 +38,13 @@ namespace ConsoleApp1
 
            
             int Blink = 0;
-            int count = 0; 
+            int count = 0;
+            string port;
             string meditation, attention; //algorithm dataset
             byte[] buffer = new byte[2048];
             int bytesRead;
+
+            
 
 
             // Building command to enable JSON output from ThinkGear Connector (TGC)
@@ -50,18 +53,22 @@ namespace ConsoleApp1
             byte[] backward = Encoding.ASCII.GetBytes("2");
             byte[] left = Encoding.ASCII.GetBytes("3");
             byte[] right = Encoding.ASCII.GetBytes("4");
-            byte[] standing = Encoding.ASCII.GetBytes("5"); 
+            byte[] standing = Encoding.ASCII.GetBytes("5");
+
+            SerialPort comPort = new SerialPort(); 
             
             //Starting connection on com port 
            //Console.WriteLine("Enter COM Port (COM6): ");
            // var port = Console.ReadLine();
             try {                             
                 //comPort.PortName = port.ToString();
-                comPort.PortName = "COM6";
+               comPort.PortName = "COM6";         
                 comPort.BaudRate = 9600;
+             
                // comPort.Parity = Parity.None;
                 //comPort.StopBits = StopBits.One;
                 comPort.Open();
+                
             } 
 
             catch (Exception e)
@@ -226,7 +233,10 @@ namespace ConsoleApp1
 
                                                     // Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
                                                     Console.WriteLine("Bot is moving left.\n");
-                                                    comPort.Write(left, 0, 1);
+                                                    //comPort.Write(left, 0, 1);
+                                                    comPort.Write("3");
+                                                    //string cmd = "3";
+                                                    //var res = App.BluetoothManager.SendMessageAsync(cmd);
                                                     Thread.Sleep(3000);
                                                 }
 
@@ -242,7 +252,9 @@ namespace ConsoleApp1
 
                                                     //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
                                                     Console.WriteLine("Bot is moving right.\n");
-                                                    comPort.Write(right, 0, 1);
+                                                   // comPort.Write(right, 0, 1);
+                                                    comPort.Write("4");
+                                                   
                                                     Thread.Sleep(3000);
                                                 }
 
@@ -256,6 +268,7 @@ namespace ConsoleApp1
                                                         "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
                                                     Console.WriteLine("Continue reading data.\n");
+                                                    comPort.Write("5");
                                                     Thread.Sleep(3000);
                                                 }
                                                 break;
@@ -275,7 +288,8 @@ namespace ConsoleApp1
                                                     //Console.WriteLine("Blink strength: " + data["blinkStrength"].ToString());
 
                                                     Console.WriteLine("Bot is moving backward.\n");
-                                                    comPort.Write(backward, 0, 1);
+                                                    // comPort.Write(backward, 0, 1);
+                                                    comPort.Write("2");
                                                     Thread.Sleep(3000);
                                                 }
                                                 else
@@ -288,6 +302,7 @@ namespace ConsoleApp1
                                                               "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
                                                     Console.WriteLine("Continue reading data.\n");
+                                                    comPort.Write("5");
                                                     Thread.Sleep(3000);
                                                 }
                                                 break;
@@ -305,7 +320,8 @@ namespace ConsoleApp1
                                                         "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
                                                 Console.WriteLine("Bot is moving forward.\n");
-                                                comPort.Write(forward, 0, 1);
+                                                    //comPort.Write(forward, 0, 1);
+                                                    comPort.Write("1");
                                                 // Console.WriteLine("Blink strength \n: " + ((IDictionary)data["blinkStrength"]).ToString());       
                                                 Thread.Sleep(3000);
                                         }
@@ -323,7 +339,8 @@ namespace ConsoleApp1
 
 
                                             Console.WriteLine("Bot stopped.\n");
-                                            comPort.Write(standing, 0, 1);
+                                                    //comPort.Write(standing, 0, 1);
+                                                    comPort.Write("5");
                                             //Console.WriteLine("Blink strength \n: " + data["blinkStrength"].ToString());
                                             Thread.Sleep(3000);
                                         }
@@ -338,6 +355,7 @@ namespace ConsoleApp1
                                                       "High Gamma:" + ((IDictionary)data["eegPower"])["highGamma"].ToString());
 
                                             Console.WriteLine("Continue reading data.\n");
+                                                    comPort.Write("5");
                                             Thread.Sleep(3000);
                                         }
                                                 break;
